@@ -256,7 +256,7 @@
     <div class="detail-empty" id="detail-empty">LIST からエントリを<br>選択してください</div>
     <div id="detail-body" style="display:none">
       <img id="d-image" class="detail-image" src="" alt=""
-           onerror="this.style.display='none';document.getElementById('d-no-image').style.display='flex'">
+           onerror="this.style.display='none'">
       <div class="detail-no-image" id="d-no-image" style="display:none">IMAGE CLASSIFIED</div>
       <div class="detail-id" id="d-id">—</div>
       <div class="detail-full-name" id="d-name">—</div>
@@ -352,12 +352,12 @@ const DATA = [
   { id:'SCP-008', name:'SCP-008 — "Zombie Plague"', type:'scp', class:'Keter',
     lat:42.3, lng:-83.0, location:'米国・ミシガン州の研究施設',
     desc:'感染性のプリオン病原体。感染した生体は脳死後も活動を続け、他の生物を攻撃・感染させようとする。空気感染はしないが血液・体液接触で伝播する。複数のサイトに分散保管されている。',
-    status:'CONTAINED — 複数拠点', wiki:'https://scp-wiki.wikidot.com/scp-008', image:null },
+    status:'CONTAINED — 複数拠点', wiki:'https://scp-wiki.wikidot.com/scp-008', image:'https://scp-wiki.wdfiles.com/local--files/scp-008/scp-008.png' },
 
   { id:'SCP-017', name:'SCP-017 — "Shadow Person"', type:'scp', class:'Keter',
     lat:52.5, lng:13.4, location:'ドイツ・ベルリン近郊の地下鉄廃線跡',
     desc:'人型の影の形をした実体。光源に背を向けた人間の影に潜り込み、対象の影を消費してその人物を「影」に変換する。光を当て続けることで行動を抑制できる。',
-    status:'CONTAINED — Site-17', wiki:'https://scp-wiki.wikidot.com/scp-017', image:null },
+    status:'CONTAINED — Site-17', wiki:'https://scp-wiki.wikidot.com/scp-017', image:'https://scp-wiki.wdfiles.com/local--files/scp-017/scp017InCaptivity.jpg' },
 
   { id:'SCP-035', name:'SCP-035 — "Possessive Mask"', type:'scp', class:'Keter',
     lat:45.4, lng:12.3, location:'イタリア・ヴェネツィア、劇場の地下室',
@@ -390,12 +390,12 @@ const DATA = [
   { id:'SCP-082', name:'SCP-082 — "Fernand the Cannibal"', type:'scp', class:'Euclid',
     lat:48.9, lng:2.3, location:'フランス・パリ近郊の精神病院',
     desc:'体長約3mの人型巨人。「フェルナン」と名乗り、フランス語を流暢に話す高い知性を持つ。人肉食の習慣があるが財団職員とは良好な関係を維持している。自分を貴族と称し礼儀を重んじる。',
-    status:'CONTAINED — Site-17', wiki:'https://scp-wiki.wikidot.com/scp-082', image:null },
+    status:'CONTAINED — Site-17', wiki:'https://scp-wiki.wikidot.com/scp-082', image:'https://scp-wiki.wdfiles.com/local--files/scp-082/SCP-082-new.png' },
 
   { id:'SCP-085', name:'SCP-085 — "Hand-drawn Cassy"', type:'scp', class:'Safe',
     lat:37.7, lng:-122.4, location:'米国・カリフォルニア州サンフランシスコ',
     desc:'2次元の手書きアニメーション女性。SCP-914によって生命を与えられたとされる。紙の上を自由に移動でき、コミュニケーション可能。他のアニメーションや印刷物に移動することもできる。',
-    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-085', image:null },
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-085', image:'https://scp-wiki.wdfiles.com/local--files/scp-085/scp085-03.png' },
 
   { id:'SCP-087', name:'SCP-087 — "The Stairwell"', type:'scp', class:'Euclid',
     lat:51.5, lng:7.5, location:'ドイツ・ノルトライン＝ヴェストファーレン州の大学校舎',
@@ -433,7 +433,7 @@ const DATA = [
   { id:'SCP-280', name:'SCP-280 — "Eyes in the Dark"', type:'scp', class:'Keter',
     lat:53.8, lng:-1.5, location:'英国・ヨークシャーの廃鉱山',
     desc:'暗闇の中にのみ存在する人型実体。光が届かない空間に出現し、接触した対象を闇の中に引き込む。光源が消えた瞬間に行動し、光が戻ると痕跡のみを残して消える。',
-    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-280', image:null },
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-280', image:'https://scp-wiki.wdfiles.com/local--files/scp-280/new-SCP-280.png' },
 
   { id:'SCP-343', name:'SCP-343 — "God"', type:'scp', class:'Safe',
     lat:31.8, lng:35.2, location:'イスラエル・エルサレム旧市街',
@@ -443,7 +443,7 @@ const DATA = [
   { id:'SCP-354', name:'SCP-354 — "The Red Pool"', type:'scp', class:'Keter',
     lat:58.5, lng:-116.5, location:'カナダ・アルバータ州北部の針葉樹林',
     desc:'血液に酷似した赤い粘性の液体で満たされた池。定期的にさまざまな存在が池の底から這い出してくる。出現する存在はいずれも凶暴で、財団が迎撃・収容を続けている。',
-    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-354', image:null },
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-354', image:'https://scp-wiki.wdfiles.com/local--files/scp-354/redpool-new.jpg' },
 
   { id:'SCP-426', name:'SCP-426 — "I am a Toaster"', type:'scp', class:'Euclid',
     lat:51.8, lng:-1.3, location:'英国・オックスフォードシャーの学生宿舎',
@@ -453,7 +453,7 @@ const DATA = [
   { id:'SCP-457', name:'SCP-457 — "Burning Man"', type:'scp', class:'Keter',
     lat:36.2, lng:-115.1, location:'米国・ネバダ州ラスベガス近郊',
     desc:'炎でできた人型実体。可燃物を消費しながら成長・移動する。知性を持ち、消火活動や収容を試みる者を優先的に攻撃する。完全な消火による無力化が唯一の有効な抑制手段。',
-    status:'CONTAINED — Area-14', wiki:'https://scp-wiki.wikidot.com/scp-457', image:null },
+    status:'CONTAINED — Area-14', wiki:'https://scp-wiki.wikidot.com/scp-457', image:'https://scp-wiki.wdfiles.com/local--files/scp-457/scp-457-new.png' },
 
   { id:'SCP-500', name:'SCP-500 — "Panacea"', type:'scp', class:'Safe',
     lat:42.4, lng:-71.1, location:'米国・マサチューセッツ州の倉庫施設',
@@ -468,7 +468,7 @@ const DATA = [
   { id:'SCP-610', name:'SCP-610 — "The Flesh that Hates"', type:'scp', class:'Keter',
     lat:55.0, lng:83.0, location:'ロシア・ノボシビルスク州の農村地帯',
     desc:'感染性の皮膚病変から始まり、最終的に感染者の全身を有機的な「肉」の構造物に変質させる病原体。感染が進んだ個体はさらに他者を積極的に感染させようとする。発生源周辺は広範囲に汚染されている。',
-    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-610', image:null },
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-610', image:'https://scp-wiki.wdfiles.com/local--files/scp-610/610-new.png' },
 
   { id:'SCP-662', name:'SCP-662 — "Butler\'s Hand Bell"', type:'scp', class:'Safe',
     lat:51.5, lng:-0.13, location:'英国・ロンドン、オークションハウス',
@@ -484,12 +484,12 @@ const DATA = [
   { id:'SCP-701', name:'SCP-701 — "The Hanged King\'s Tragedy"', type:'scp', class:'Euclid',
     lat:51.5, lng:-0.09, location:'英国・ロンドン、国立図書館の地下書庫',
     desc:'17世紀の演劇の台本。上演されるたびに観客・出演者の間で暴力的な事件・自殺が発生する。上演の回数が重なるほど影響が増大し、33回目の上演では全員が死亡したという記録がある。',
-    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-701', image:null },
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-701', image:'https://scp-wiki.wdfiles.com/local--files/scp-701/Volgun701.jpg' },
 
   { id:'SCP-823', name:'SCP-823 — "Carnival of Horrors"', type:'scp', class:'Euclid',
     lat:38.9, lng:-77.4, location:'米国・バージニア州の廃遊園地',
     desc:'廃業した移動遊園地の跡地。敷地内に立ち入った人間は、各アトラクションに対応した方法で死亡する（ジェットコースター付近での飛行・落下死等）。死因はいずれも物理的に不可能な状況で発生している。',
-    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-823', image:null },
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-823', image:'https://scp-wiki.wdfiles.com/local--files/scp-823/823-005.jpg' },
 
   { id:'SCP-914', name:'SCP-914 — "The Clockworks"', type:'scp', class:'Safe',
     lat:59.9, lng:10.7, location:'ノルウェー・オスロ郊外の農家',
@@ -511,7 +511,7 @@ const DATA = [
   { id:'SCP-966', name:'SCP-966 — "Sleep Killer"', type:'scp', class:'Keter',
     lat:4.2, lng:101.9, location:'マレーシア・ペラ州の密林',
     desc:'透明な人型生物。通常の視覚では不可視で、特定の光学フィルタを通してのみ確認できる。犠牲者に電磁的な影響を与え睡眠を不可能にする。数日の睡眠剥奪後、衰弱した対象を捕食する。',
-    status:'CONTAINED — Site-45', wiki:'https://scp-wiki.wikidot.com/scp-966', image:null },
+    status:'CONTAINED — Site-45', wiki:'https://scp-wiki.wikidot.com/scp-966', image:'https://scp-wiki.wdfiles.com/local--files/scp-966/Darkskullteeth%20infrared%201-new.png' },
 
   { id:'SCP-1000', name:'SCP-1000 — "Bigfoot"', type:'scp', class:'Euclid',
     lat:49.0, lng:-121.5, location:'カナダ・ブリティッシュコロンビア州の原始林',
@@ -528,7 +528,7 @@ const DATA = [
   { id:'SCP-1230', name:'SCP-1230 — "A Hero Born"', type:'scp', class:'Safe',
     lat:47.4, lng:8.5, location:'スイス・チューリッヒの古書店',
     desc:'革表紙の日記帳。手に取ると深い眠りに落ち、ファンタジー世界を舞台にした壮大な冒険の夢を体験する。夢は数百年分の体験として感じられるが、現実での経過時間は数時間のみ。',
-    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-1230', image:null },
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-1230', image:'https://scp-wiki.wdfiles.com/local--files/scp-1230/new1230.png' },
 
   { id:'SCP-1425', name:'SCP-1425 — "Star Signals"', type:'scp', class:'Keter',
     lat:34.0, lng:-118.2, location:'米国・カリフォルニア州ロサンゼルス',
@@ -538,37 +538,37 @@ const DATA = [
   { id:'SCP-1471', name:'SCP-1471 — "MalO ver1.0.0"', type:'scp', class:'Euclid',
     lat:37.3, lng:-122.0, location:'米国・カリフォルニア州シリコンバレー（起源推定）',
     desc:'無料スマートフォンアプリ。インストールから48時間以内に、頭蓋骨と犬が合わさったような外見の人型実体（SCP-1471-A）が写真・鏡などに映り込み始める。露出時間が増えるほど現実でも目撃されるようになる。',
-    status:'MONITORING — デジタル監視中', wiki:'https://scp-wiki.wikidot.com/scp-1471', image:null },
+    status:'MONITORING — デジタル監視中', wiki:'https://scp-wiki.wikidot.com/scp-1471', image:'https://scp-wiki.wdfiles.com/local--files/scp-1471/scp1471.jpg' },
 
   { id:'SCP-1499', name:'SCP-1499 — "The Gas Mask"', type:'scp', class:'Euclid',
     lat:55.7, lng:37.6, location:'ロシア・モスクワ郊外の廃工場',
     desc:'ソ連製防毒マスク。装着すると別次元に転送され、灰色の平原に立つ高い柱と人型の怪物が徘徊する世界に出現する。マスクを外すと元の場所に戻れるが、怪物には追跡能力がある。',
-    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-1499', image:null },
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-1499', image:'https://scp-wiki.wdfiles.com/local--files/scp-1499/small.png' },
 
   { id:'SCP-2006', name:'SCP-2006 — "Too Scary"', type:'scp', class:'Safe',
     lat:35.6, lng:139.7, location:'日本・東京都内の映画館（閉館後）',
     desc:'球形の変身能力を持つ実体。「恐怖」という概念に強い関心を持ち、Bホラー映画の怪物に変身して人々を怖がらせることを好む。本来の姿や能力の全貌は不明だが、財団には協力的。',
-    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-2006', image:null },
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-2006', image:'https://scp-wiki.wdfiles.com/local--files/scp-2006/SCP%20Ro-Man.jpg' },
 
   { id:'SCP-2117', name:'SCP-2117 — "The Lost Ship"', type:'scp', class:'Safe',
     lat:51.6, lng:63.3, location:'カザフスタン・バイコヌール宇宙基地（発射施設）',
     desc:'低地球軌道を周回する旧ソ連の宇宙船。内部には乗組員の遺体と未知の技術で作られた機器が残されている。財団要員が定期的に送り込まれ、技術の解析が進められている。',
-    status:'CONTAINED — 軌道上監視', wiki:'https://scp-wiki.wikidot.com/scp-2117', image:null },
+    status:'CONTAINED — 軌道上監視', wiki:'https://scp-wiki.wikidot.com/scp-2117', image:'https://scp-wiki.wdfiles.com/local--files/fragment:2117-1/2117.png' },
 
   { id:'SCP-2295', name:'SCP-2295 — "The Bear with a Heart of Patchwork"', type:'scp', class:'Safe',
     lat:44.9, lng:-93.2, location:'米国・ミネソタ州ミネアポリスの雑貨店',
     desc:'ぬいぐるみのクマ。心臓や臓器が欠損した患者の傍に置くと、布・ボタン・糸などを材料に機能的な代替臓器を縫い合わせて作り出し、患者に移植する。移植された臓器は完全に機能する。',
-    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-2295', image:null },
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-2295', image:'https://i.redd.it/az1bub0s3tg21.jpg' },
 
   { id:'SCP-2316', name:'SCP-2316 — "Field Trip"', type:'scp', class:'Euclid',
     lat:50.8, lng:-115.8, location:'カナダ・ブリティッシュコロンビア州の山中湖',
     desc:'湖の中に複数の人間の溺死体が浮遊している。観測者はこれらの死体を「自分がよく知っている人物」として認識するよう認知操作される。あなたはそれらを知らない。',
-    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-2316', image:null },
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-2316', image:'https://scp-wiki.wdfiles.com/local--files/scp-2316/header.png' },
 
   { id:'SCP-2399', name:'SCP-2399 — "A Malfunctioning Destroyer"', type:'scp', class:'Keter',
     lat:19.8, lng:-155.5, location:'ハワイ・マウナケア天文台（観測地点）',
     desc:'木星の大赤斑嵐の中心に存在する超巨大人工構造物。何らかの理由で損傷を受けており修復活動が観測されている。財団の分析では地球を標的とした何らかの機能を持つと推定されている。',
-    status:'MONITORING — 遠隔観測のみ', wiki:'https://scp-wiki.wikidot.com/scp-2399', image:null },
+    status:'MONITORING — 遠隔観測のみ', wiki:'https://scp-wiki.wikidot.com/scp-2399', image:'https://scp-wiki.wdfiles.com/local--files/scp-2399/header.png' },
 
   { id:'SCP-2521', name:'SCP-2521 — [●●●]', type:'scp', class:'Keter',
     lat:35.7, lng:139.7, location:'日本・東京都内（発見地点）',
@@ -578,12 +578,12 @@ const DATA = [
   { id:'SCP-2935', name:'SCP-2935 — "O, Death"', type:'scp', class:'Euclid',
     lat:35.7, lng:-80.9, location:'米国・ノースカロライナ州の墓地',
     desc:'墓地内の洞窟の入口。内部は地球に酷似した別次元への通路となっており、その世界では全ての生命が死滅している。植物を含むすべての生命活動が2014年4月に停止した痕跡がある。',
-    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-2935', image:null },
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-2935', image:'https://scp-wiki.wdfiles.com/local--files/scp-2935/hole.jpg' },
 
   { id:'SCP-3000', name:'SCP-3000 — "Anantashesha"', type:'scp', class:'Thaumiel',
     lat:10.5, lng:85.5, location:'インド洋・ベンガル湾深部',
     desc:'全長数千キロに及ぶ超巨大なウナギ型生物。その神経化学物質は人間の記憶を消去する効果を持ち、財団はこれをアムネジア剤の製造に利用している。Thaumiel指定は財団の運営に直結するため。',
-    status:'CONTAINED — 遠隔収容', wiki:'https://scp-wiki.wikidot.com/scp-3000', image:null },
+    status:'CONTAINED — 遠隔収容', wiki:'https://scp-wiki.wikidot.com/scp-3000', image:'https://scp-wiki.wdfiles.com/local--files/scp-3000/gaslight.png' },
 
   { id:'SCP-3008', name:'SCP-3008 — "A Perfectly Normal, Regular Old IKEA"', type:'scp', class:'Euclid',
     lat:57.7, lng:11.9, location:'スウェーデン・ヨーテボリ市郊外',
@@ -594,27 +594,27 @@ const DATA = [
   { id:'SCP-3199', name:'SCP-3199 — "Humans, Refuted"', type:'scp', class:'Keter',
     lat:-26.2, lng:28.0, location:'南アフリカ・ヨハネスブルク近郊の廃屋',
     desc:'人間と鶏を掛け合わせたような外見の生物。強い酸性の分泌液を嘔吐し、硬い外殻を持つ卵を産んで急速に増殖する。知性はないが攻撃性は高く、あらゆる傷害から驚異的な速度で回復する。',
-    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-3199', image:null },
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-3199', image:'https://scp-wiki.wdfiles.com/local--files/scp-3199/resized.jpg' },
 
   { id:'SCP-3288', name:'SCP-3288 — "The Aristocrats"', type:'scp', class:'Keter',
     lat:48.2, lng:16.4, location:'オーストリア・ウィーン旧市街の地下',
     desc:'ヨーロッパ貴族の末裔として長期間地下に潜り進化した人型亜種群。高い知性を持ち、狩猟・繁殖のために地上に出没する。王侯貴族の名家の多くが実際には彼らのフロントであったとされる。',
-    status:'MONITORING — 継続捜索中', wiki:'https://scp-wiki.wikidot.com/scp-3288', image:null },
+    status:'MONITORING — 継続捜索中', wiki:'https://scp-wiki.wikidot.com/scp-3288', image:'https://scp-wiki.wdfiles.com/local--files/scp-3288/leopold%20i.jpg' },
 
   { id:'SCP-4217', name:'SCP-4217 — "Contain the Bismarck!"', type:'scp', class:'Euclid',
     lat:48.1, lng:-16.2, location:'北大西洋・ビスマルク号沈没海域',
     desc:'第二次世界大戦で沈没したドイツ戦艦ビスマルクの残骸に宿った異常存在。定期的に「復活」しようとする動きが観測されており、財団の海洋部隊が継続的に抑制活動を実施している。',
-    status:'CONTAINED — 海洋封鎖', wiki:'https://scp-wiki.wikidot.com/scp-4217', image:null },
+    status:'CONTAINED — 海洋封鎖', wiki:'https://scp-wiki.wikidot.com/scp-4217', image:'https://scp-wiki.wdfiles.com/local--files/scp-4217/bismarck.jpg' },
 
   { id:'SCP-4666', name:'SCP-4666 — "The Yule Man"', type:'scp', class:'Keter',
     lat:61.0, lng:9.0, location:'ノルウェー・スカンジナビア山脈の奥地',
     desc:'冬至の夜に孤立した家族を訪問する人型存在。訪問後、家族の一部が死亡または消失し、生存者は精神的外傷を負う。被害は世界中の僻地で報告されており、クリスマスの伝承と酷似する点が多い。',
-    status:'UNCONTAINED — 季節的観測中', wiki:'https://scp-wiki.wikidot.com/scp-4666', image:null },
+    status:'UNCONTAINED — 季節的観測中', wiki:'https://scp-wiki.wikidot.com/scp-4666', image:'https://scp-wiki.wdfiles.com/local--files/scp-4666/yuleman-photo%20FINAL.jpg' },
 
   { id:'SCP-4999', name:'SCP-4999 — "Someone to Watch Over Us"', type:'scp', class:'Safe',
     lat:48.8, lng:2.3, location:'世界各地（最後の目撃地点：パリ近郊の病院）',
     desc:'身元不明の成人男性の姿をした存在。孤独に死を迎えようとしている人間の傍に現れ、最期の瞬間を見守る。タバコを吸っている様子が多数の死後写真に記録されている。収容の試みに穏やかに応じる。',
-    status:'MONITORING — 追跡不可', wiki:'https://scp-wiki.wikidot.com/scp-4999', image:null },
+    status:'MONITORING — 追跡不可', wiki:'https://scp-wiki.wikidot.com/scp-4999', image:'https://scp-wiki.wdfiles.com/local--files/scp-4999/death.png' },
 
   { id:'SCP-5000', name:'SCP-5000 — "Why?"', type:'scp', class:'Safe',
     lat:38.9, lng:-77.0, location:'米国・ワシントンD.C.（財団北米本部付近）',
@@ -650,12 +650,14 @@ function buildList() {
   const showFacilities = (currentFilter === 'all' || currentFilter === 'facility');
   const showScps       = (currentFilter !== 'facility');
 
+  // 施設
   if (showFacilities) {
     let facs = DATA.filter(d => d.type === 'facility');
     if (currentSort === 'id') facs = facs.slice().sort((a,b) => extractNum(a.id) - extractNum(b.id));
     appendSection(container, 'FACILITIES', facs);
   }
 
+  // SCP
   if (showScps) {
     let scps = DATA.filter(d => d.type === 'scp');
     if (currentFilter !== 'all') scps = scps.filter(d => d.class === currentFilter);
@@ -674,6 +676,7 @@ function buildList() {
     if (scps.length > 0) appendSection(container, label, scps);
   }
 
+  // 選択状態の復元
   if (selectedId) {
     const el = document.getElementById('item-' + selectedId.replace(/[^\w]/g, '-'));
     if (el) el.classList.add('selected');
