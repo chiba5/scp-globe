@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCP Foundation — Global Containment Map</title>
+  <script src="https://unpkg.com/globe.gl"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #000;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      color: #ccc;
+    }
+
+    /* ── Globe side ── */
+    #globe-wrap {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #header {
+      position: absolute;
+      top: 20px;
+      left: 0; right: 0;
+      text-align: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+    #header .title {
+      font-size: 12px;
+      letter-spacing: 6px;
+      color: #ddd;
+    }
+    #header .subtitle {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    #legend {
+      position: absolute;
+      bottom: 70px;
+      left: 20px;
+      z-index: 10;
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 10px;
+      color: #999;
+      letter-spacing: 1px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    #filters {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+    .filter-btn {
+      background: rgba(0,0,0,0.85);
+      border: 1px solid #333;
+      color: #888;
+      padding: 5px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: #666; color: #bbb; }
+    .filter-btn.active { border-color: #bbb; color: #eee; }
+
+    /* ── Side Panel ── */
+    #panel {
+      width: 320px;
+      flex-shrink: 0;
+      background: #050505;
+      border-left: 1px solid #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-top {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid #1a1a1a;
+      flex-shrink: 0;
+    }
+    .panel-top .logo {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: #ddd;
+      margin-bottom: 3px;
+    }
+    .panel-top .tagline {
+      font-size: 7px;
+      letter-spacing: 2px;
+      color: #444;
+    }
+
+    /* タブバー */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid #1a1a1a;
+      flex-shrink: 0;
+    }
+    .tab {
+      flex: 1;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #555;
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      padding: 10px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: -1px;
+    }
+    .tab:hover { color: #aaa; }
+    .tab.active { color: #ddd; border-bottom-color: #ddd; }
+
+    /* タブコンテンツ */
+    .tab-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .tab-content::-webkit-scrollbar { width: 2px; }
+    .tab-content::-webkit-scrollbar-thumb { background: #222; }
+
+    /* ── LIST タブ ── */
+    #tab-list { padding: 0; }
+
+    .list-section-label {
+      font-size: 7px;
+      letter-spacing: 3px;
+      color: #555;
+      padding: 14px 20px 8px;
+      background: #050505;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      border-bottom: 1px solid #111;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      border-bottom: 1px solid #0e0e0e;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .list-item:hover { background: #0d0d0d; }
+    .list-item.selected { background: #111; }
+
+    .item-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .item-id {
+      font-size: 11px;
+      color: #ccc;
+      flex: 1;
+      letter-spacing: 0.5px;
+    }
+    .item-class {
+      font-size: 8px;
+      letter-spacing: 1px;
+      color: #555;
+    }
+
+    /* ── DETAIL タブ ── */
+    #tab-detail { padding: 20px; }
+
+    .detail-empty {
+      text-align: center;
+      color: #333;
+      font-size: 9px;
+      letter-spacing: 2px;
+      line-height: 2.5;
+      margin-top: 60px;
+    }
+
+    .detail-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      margin-bottom: 18px;
+      border: 1px solid #1a1a1a;
+      background: #0a0a0a;
+    }
+    .detail-no-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #111;
+      background: #080808;
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: #222;
+      margin-bottom: 18px;
+    }
+
+    .detail-id {
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #eee;
+      margin-bottom: 4px;
+    }
+    .detail-full-name {
+      font-size: 10px;
+      color: #666;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .class-badge {
+      display: inline-block;
+      font-size: 8px;
+      letter-spacing: 3px;
+      padding: 3px 10px;
+      border: 1px solid;
+      margin-bottom: 22px;
+    }
+
+    .d-section { margin-bottom: 18px; }
+    .d-label {
+      font-size: 7px;
+      letter-spacing: 3px;
+      color: #555;
+      margin-bottom: 7px;
+    }
+    .d-body {
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.8;
+    }
+    .d-coords {
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .d-status {
+      font-size: 11px;
+      color: #999;
+      letter-spacing: 0.5px;
+    }
+
+    hr.sep {
+      border: none;
+      border-top: 1px solid #141414;
+      margin: 16px 0;
+    }
+
+    .wiki-link {
+      display: inline-block;
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: #555;
+      text-decoration: none;
+      border: 1px solid #222;
+      padding: 5px 12px;
+      margin-top: 6px;
+      transition: all 0.2s;
+    }
+    .wiki-link:hover { color: #aaa; border-color: #555; }
+  </style>
+</head>
+<body>
+
+<div id="globe-wrap">
+  <div id="header">
+    <div class="title">SCP FOUNDATION</div>
+    <div class="subtitle">GLOBAL CONTAINMENT &amp; OBSERVATION MAP — [CLEARANCE LEVEL 3]</div>
+  </div>
+
+  <div id="legend">
+    <div class="legend-row"><span class="dot" style="background:#4488ff"></span>FACILITY</div>
+    <div class="legend-row"><span class="dot" style="background:#00dd77"></span>SAFE</div>
+    <div class="legend-row"><span class="dot" style="background:#ffcc00"></span>EUCLID</div>
+    <div class="legend-row"><span class="dot" style="background:#ff3300"></span>KETER</div>
+    <div class="legend-row"><span class="dot" style="background:#cc44ff"></span>THAUMIEL</div>
+  </div>
+
+  <div id="filters">
+    <button class="filter-btn active" data-f="all" onclick="setFilter(this)">ALL</button>
+    <button class="filter-btn" data-f="facility" onclick="setFilter(this)">FACILITIES</button>
+    <button class="filter-btn" data-f="scp" onclick="setFilter(this)">SCP SITES</button>
+  </div>
+
+  <div id="globe"></div>
+</div>
+
+<div id="panel">
+  <div class="panel-top">
+    <div class="logo">SCP FOUNDATION</div>
+    <div class="tagline">SECURE. CONTAIN. PROTECT.</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" data-tab="list" onclick="switchTab(this)">LIST</button>
+    <button class="tab"        data-tab="detail" onclick="switchTab(this)">DETAIL</button>
+  </div>
+
+  <!-- LIST タブ -->
+  <div id="tab-list" class="tab-content">
+    <div class="list-section-label">FACILITIES</div>
+    <div id="list-facilities"></div>
+    <div class="list-section-label">SCP OBSERVATION SITES</div>
+    <div id="list-scps"></div>
+  </div>
+
+  <!-- DETAIL タブ -->
+  <div id="tab-detail" class="tab-content" style="display:none">
+    <div class="detail-empty" id="detail-empty">
+      LIST からエントリを<br>選択してください
+    </div>
+    <div id="detail-body" style="display:none">
+      <img id="d-image" class="detail-image" src="" alt="" onerror="this.style.display='none'; document.getElementById('d-no-image').style.display='flex'">
+      <div class="detail-no-image" id="d-no-image" style="display:none">IMAGE CLASSIFIED</div>
+      <div class="detail-id" id="d-id">—</div>
+      <div class="detail-full-name" id="d-name">—</div>
+      <div class="class-badge" id="d-badge">—</div>
+      <div class="d-section">
+        <div class="d-label">DESCRIPTION</div>
+        <div class="d-body" id="d-desc">—</div>
+      </div>
+      <hr class="sep">
+      <div class="d-section">
+        <div class="d-label">OBSERVATION / DISCOVERY SITE</div>
+        <div class="d-body" id="d-location">—</div>
+        <div class="d-coords" id="d-coords">—</div>
+      </div>
+      <div class="d-section">
+        <div class="d-label">CONTAINMENT STATUS</div>
+        <div class="d-status" id="d-status">—</div>
+      </div>
+      <a class="wiki-link" id="d-wiki" href="#" target="_blank">VIEW FULL DOCUMENT →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = {
+  facility: '#4488ff',
+  Safe:     '#00dd77',
+  Euclid:   '#ffcc00',
+  Keter:    '#ff3300',
+  Thaumiel: '#cc44ff',
+};
+
+const DATA = [
+  // ── FACILITIES ───────────────────────────────────────────────
+  { id:'Site-19',   name:'Site-19',   type:'facility', lat:40.5,  lng:-74.2,
+    location:'米国・ニュージャージー州（地下）',
+    desc:'財団最大の恒久収容施設。Safe・Euclidクラスを中心に多数のオブジェクトを収容。常駐職員数は3,000名を超え、財団活動の主要拠点として機能する。',
+    status:'OPERATIONAL', wiki:'https://scp-wiki.wikidot.com/secure-facility-dossier-site-19', image:null },
+
+  { id:'Site-17',   name:'Site-17',   type:'facility', lat:48.1,  lng:11.6,
+    location:'ドイツ・バイエルン州（地下）',
+    desc:'人型異常存在の専門収容施設。心理カウンセリング・行動研究部門を併設し、人型SCPとの対話実験が多数行われている。',
+    status:'OPERATIONAL', wiki:null, image:null },
+
+  { id:'Area-14',   name:'Area-14',   type:'facility', lat:37.1,  lng:-116.0,
+    location:'米国・ネバダ州（広域地下施設）',
+    desc:'大型・高危険度生物SCPの専用収容区画。周囲200kmが立入禁止エリアに指定されており、機動部隊の恒常的な配備がなされている。',
+    status:'OPERATIONAL', wiki:null, image:null },
+
+  { id:'Site-76',   name:'Site-76',   type:'facility', lat:38.6,  lng:-89.0,
+    location:'米国・イリノイ州（地下）',
+    desc:'歴史的・文化的異常オブジェクトの研究・収容に特化した施設。財団アーカイブ部門の北米主要拠点として古文書・遺物の分析を行う。',
+    status:'OPERATIONAL', wiki:null, image:null },
+
+  { id:'Site-81',   name:'Site-81',   type:'facility', lat:39.2,  lng:-86.5,
+    location:'米国・インディアナ州（地下）',
+    desc:'Euclid・Keterクラス収容の北米中央ハブ。機動部隊MTF-Eta-10「See No Evil」の主要拠点であり、認知的異常の研究でも知られる。',
+    status:'OPERATIONAL', wiki:'https://scp-wiki.wikidot.com/site-81-hub', image:null },
+
+  { id:'Area-12',   name:'Area-12',   type:'facility', lat:44.5,  lng:-110.0,
+    location:'米国・ワイオミング州（山岳地帯）',
+    desc:'機械・電子系異常オブジェクトの研究・収容施設。イエローストーン国立公園近郊の地下に位置し、高度な電磁シールドを備える。',
+    status:'OPERATIONAL', wiki:null, image:null },
+
+  { id:'Site-45',   name:'Site-45',   type:'facility', lat:-28.0, lng:130.0,
+    location:'オーストラリア・南オーストラリア州（砂漠地帯）',
+    desc:'外界から高度に隔離された収容施設。超高リスクKeterクラスの専用区画を持ち、年間の立入許可数が財団内で最も制限されている。',
+    status:'OPERATIONAL', wiki:null, image:null },
+
+  { id:'Site-103',  name:'Site-103',  type:'facility', lat:31.2,  lng:121.5,
+    location:'中国・上海市郊外（地下）',
+    desc:'アジア太平洋地域の主要収容・緊急対応拠点。東南アジア全域の異常事象をリアルタイム監視するセンターを有する。',
+    status:'OPERATIONAL', wiki:null, image:null },
+
+  { id:'Sector-25', name:'Sector-25', type:'facility', lat:55.8,  lng:49.1,
+    location:'ロシア・タタールスタン共和国',
+    desc:'旧ソ連時代の極秘研究施設を財団が転用。東欧・中央アジア地域の収容ハブとして機能し、旧ソ連製異常オブジェクトの管理記録を保管する。',
+    status:'OPERATIONAL', wiki:null, image:null },
+
+  // ── SCP OBSERVATION SITES ────────────────────────────────────
+  { id:'SCP-049', name:'SCP-049 — "Pestilence Doctor"', type:'scp', class:'Euclid',
+    lat:43.6, lng:3.9, location:'フランス・エロー県の農村',
+    desc:'中世ヨーロッパの黒死病医師に酷似した外見を持つ人型存在。「ペスト」と呼ぶ何らかのものを感知・治療しようとし、接触した人間に外科的処置を施す。その処置は対象の死を招き、やがて死体を蘇生する。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-049',
+    image:'https://scp-wiki.wdfiles.com/local--files/scp-049/049_1_ntsc.png' },
+
+  { id:'SCP-076', name:'SCP-076 — "Able"', type:'scp', class:'Keter',
+    lat:26.8, lng:30.8, location:'エジプト・砂漠地帯の古代遺跡',
+    desc:'黒い石の立方体（SCP-076-1）と、その内部に封印された超人的戦闘能力を持つ人型存在Able（SCP-076-2）のセット。エジプト砂漠の発掘調査中に発見され、繰り返し収容施設を脱走している。',
+    status:'CONTAINED — Area-14', wiki:'https://scp-wiki.wikidot.com/scp-076',
+    image:'https://i.kym-cdn.com/photos/images/original/000/623/709/b5c.jpg' },
+
+  { id:'SCP-035', name:'SCP-035 — "Possessive Mask"', type:'scp', class:'Keter',
+    lat:45.4, lng:12.3, location:'イタリア・ヴェネツィア、劇場の地下室',
+    desc:'白い仮面。着用した個体の意識を完全に乗っ取り支配する。周囲に腐食性の黒い液体を分泌し続け、長時間近くにいた人間にも精神的影響を与える。自ら着用を強く誘導してくる。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-035',
+    image:'https://scp-wiki.wdfiles.com/local--files/scp-035/scp--035--002-new.gif' },
+
+  { id:'SCP-093', name:'SCP-093 — "Red Sea Object"', type:'scp', class:'Euclid',
+    lat:45.5, lng:-122.7, location:'米国・オレゴン州の民家',
+    desc:'血のように赤い円形の石板。鏡に接触させると別次元への入口が開く。その先は人類が消えた荒廃した世界で、巨大な生物の痕跡と生存者のログが残されている。',
+    status:'CONTAINED — Site-76', wiki:'https://scp-wiki.wikidot.com/scp-093',
+    image:'https://upload.wikimedia.org/wikipedia/commons/4/4d/SCP-093_Recovered_Materials.jpg' },
+
+  { id:'SCP-914', name:'SCP-914 — "The Clockworks"', type:'scp', class:'Safe',
+    lat:59.9, lng:10.7, location:'ノルウェー・オスロ郊外の農家',
+    desc:'大型の精巧な変換装置。「Rough」から「Fine」まで5段階のダイヤルで投入物を変換・変質させる。有機物・無機物を問わず適用可能で、予測不能な変換結果を生じることも多い。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-914',
+    image:'https://scp-wiki.wdfiles.com/local--files/scp-914/gears.jpg' },
+
+  { id:'SCP-106', name:'SCP-106 — "The Old Man"', type:'scp', class:'Keter',
+    lat:51.5, lng:-0.1, location:'英国・ロンドン北部の廃墟',
+    desc:'老人の外見を持つ人型存在。固体透過能力・腐食能力を持ち、捕獲した犠牲者を「ポケット次元」へ引き込む。接触した全物質を腐食させる。通常の封じ込め手段をほぼ無効化する。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-106',
+    image:'https://scp-wiki.wdfiles.com/local--files/scp-106/106emergencyklay.jpg' },
+
+  { id:'SCP-426', name:'SCP-426 — "I am a Toaster"', type:'scp', class:'Euclid',
+    lat:51.8, lng:-1.3, location:'英国・オックスフォードシャーの学生宿舎',
+    desc:'一台の家庭用トースター。このオブジェクトについて言及する者は、必ず一人称で語ってしまう（「私はトースターです」等）。長期接触により自己認識が変質する事例が報告されている。',
+    status:'CONTAINED — Site-17', wiki:'https://scp-wiki.wikidot.com/scp-426',
+    image:null },
+
+  { id:'SCP-087', name:'SCP-087 — "The Stairwell"', type:'scp', class:'Euclid',
+    lat:51.5, lng:7.5, location:'ドイツ・ノルトライン＝ヴェストファーレン州の大学校舎',
+    desc:'下り続けても終わりの来ない屋内階段。通常の建築的限界を無視した深さを持つ。内部では子供の泣き声が聞こえ続け、時に顔の特徴のみを持つ存在が現れる。',
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-087',
+    image:'https://scp-wiki.wdfiles.com/local--files/scp-087/087face.jpg' },
+
+  { id:'SCP-173', name:'SCP-173 — "The Sculpture"', type:'scp', class:'Euclid',
+    lat:33.6, lng:130.4, location:'日本・福岡県の廃工場（推定）',
+    desc:'人型の彫刻。生物起源不明のコンクリートと金属から構成される。直接視線を外した瞬間に移動し、近接する対象の頸椎を折るか首を絞めて即座に殺傷する。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-173',
+    image:null },
+
+  { id:'SCP-682', name:'SCP-682 — "Hard-to-Destroy Reptile"', type:'scp', class:'Keter',
+    lat:-62.0, lng:-58.5, location:'南極半島・南シェトランド諸島沖',
+    desc:'極めて高い適応能力・再生能力を持つ大型爬虫類型存在。あらゆる生命体への強い憎悪を示す。これまでに試みられたすべての抹消手段が失敗に終わっており、財団最大の脅威とみなされている。',
+    status:'CONTAINED — Area-14', wiki:'https://scp-wiki.wikidot.com/scp-682',
+    image:'https://scp-wiki.wdfiles.com/local--files/scp-682/monster8editub9-new.jpg' },
+
+  { id:'SCP-096', name:'SCP-096 — "The Shy Guy"', type:'scp', class:'Euclid',
+    lat:27.9, lng:86.9, location:'ネパール・エベレスト山中の洞窟',
+    desc:'体長3m超の人型存在。通常は無害だが、自身の顔を目撃した者（写真・映像経由を含む）に対して激しい動揺を示し、世界のどこからでもその対象を追跡・殺害する。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-096',
+    image:'https://upload.wikimedia.org/wikipedia/commons/3/3f/SCP-096_%28SCP_-_Containment_Breach%29.jpg' },
+
+  { id:'SCP-343', name:'SCP-343 — "God"', type:'scp', class:'Safe',
+    lat:31.8, lng:35.2, location:'イスラエル・エルサレム旧市街',
+    desc:'自身が「神」であると主張する老人の外見を持つ存在。全知・全能に近い能力を示すが、財団の収容に自ら進んで同意した。職員との長時間の対話を好み、協力的である。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-343',
+    image:null },
+
+  { id:'SCP-3008', name:'SCP-3008 — "A Perfectly Normal, Regular Old IKEA"', type:'scp', class:'Euclid',
+    lat:57.7, lng:11.9, location:'スウェーデン・ヨーテボリ市郊外',
+    desc:'外観上は通常のIKEA店舗だが、内部に無限に広がる異次元空間を持つ。迷い込んだ者は脱出が困難で、夜間に活動する顔のない「スタッフ」が徘徊する。生存者のコミュニティが内部に形成されている。',
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-3008',
+    image:'https://i.kym-cdn.com/photos/images/original/002/080/348/801.jpg' },
+
+  { id:'SCP-1048', name:'SCP-1048 — "Builder Bear"', type:'scp', class:'Keter',
+    lat:-23.5, lng:-46.6, location:'ブラジル・サンパウロ市内の福祉施設',
+    desc:'小型のテディベア型存在。無害に見えるが、入手した有機素材（皮膚・骨・胎児等）を使用して自身の複製体を製造する。複製体は強い敵意を持ち人を傷つける。現在所在不明。',
+    status:'UNCONTAINED — 所在不明', wiki:'https://scp-wiki.wikidot.com/scp-1048',
+    image:'https://i.kym-cdn.com/photos/images/original/000/585/346/66f.jpg' },
+
+  { id:'SCP-2316', name:'SCP-2316 — "Field Trip"', type:'scp', class:'Euclid',
+    lat:50.8, lng:-115.8, location:'カナダ・ブリティッシュコロンビア州の山中湖',
+    desc:'湖の中に複数の人間の溺死体が浮遊している。観測者はこれらの死体を「自分がよく知っている人物」として認識するよう認知操作される。あなたはそれらを知らない。',
+    status:'CONTAINED — 現地封鎖', wiki:'https://scp-wiki.wikidot.com/scp-2316',
+    image:null },
+
+  { id:'SCP-500', name:'SCP-500 — "Panacea"', type:'scp', class:'Safe',
+    lat:42.4, lng:-71.1, location:'米国・マサチューセッツ州の倉庫施設',
+    desc:'赤い錠剤が入った小瓶（初期確認時47粒）。服用するとあらゆる既知・未知の疾患・外傷・変質を完全に治癒する。財団の管理下では残りの使用可能数が厳密に管理されている。',
+    status:'CONTAINED — Site-19', wiki:'https://scp-wiki.wikidot.com/scp-500',
+    image:null },
+
+  { id:'SCP-1000', name:'SCP-1000 — "Bigfoot"', type:'scp', class:'Euclid',
+    lat:49.0, lng:-121.5, location:'カナダ・ブリティッシュコロンビア州の原始林',
+    desc:'人類と並行進化した高度な霊長類種族。かつて高度な文明を誇ったが何らかの原因により個体数が激減し、現在は深い森林地帯に潜伏する。「ビッグフット」目撃談はこの種族に起因する。',
+    status:'MONITORING — 継続観測中', wiki:'https://scp-wiki.wikidot.com/scp-1000',
+    image:'https://scp-wiki.wdfiles.com/local--files/scp-1000/bigfoot_patterson01-new.png' },
+
+  { id:'SCP-055', name:'SCP-055 — "[unknown]"', type:'scp', class:'Keter',
+    lat:38.9, lng:-77.0, location:'米国・バージニア州の研究施設（詳細不明）',
+    desc:'自己隠蔽特性を持つオブジェクト。観測・記録しようとしても「何でないか」しか記憶に残らず、正確な描写が不可能。球状であることのみ確認されている。詳細記録は現在も作成不能。',
+    status:'CONTAINED — Site-19（推定）', wiki:'https://scp-wiki.wikidot.com/scp-055',
+    image:null },
+
+  { id:'SCP-001', name:'SCP-001 — [DATA EXPUNGED]', type:'scp', class:'Thaumiel',
+    lat:0.0, lng:0.0, location:'座標 0°00\'00"N  0°00\'00"E — 詳細は最高機密指定',
+    desc:'[DATA EXPUNGED] このエントリへのアクセスにはO5評議会レベルのクリアランスが必要です。財団の設立に直接関わるとされる実体またはオブジェクト。既知の情報のほぼすべてが抹消されている。',
+    status:'[O5 CLEARANCE REQUIRED]', wiki:'https://scp-wiki.wikidot.com/scp-001',
+    image:null },
+];
+
+// ── LIST 生成 ─────────────────────────────────────────────────
+function buildList() {
+  const facContainer = document.getElementById('list-facilities');
+  const scpContainer = document.getElementById('list-scps');
+
+  DATA.filter(d => d.type === 'facility').forEach(d => {
+    facContainer.appendChild(makeListItem(d));
+  });
+
+  DATA.filter(d => d.type === 'scp').forEach(d => {
+    scpContainer.appendChild(makeListItem(d));
+  });
+}
+
+function makeListItem(d) {
+  const el = document.createElement('div');
+  el.className = 'list-item';
+  el.id = 'item-' + d.id.replace(/[^\w]/g, '-');
+
+  const colorKey = d.type === 'facility' ? 'facility' : d.class;
+  const color = COLORS[colorKey] || '#aaa';
+  const classLabel = d.type === 'facility' ? 'FACILITY' : d.class.toUpperCase();
+
+  el.innerHTML = `
+    <span class="item-dot" style="background:${color}"></span>
+    <span class="item-id">${d.id}</span>
+    <span class="item-class" style="color:${color}">${classLabel}</span>
+  `;
+  el.addEventListener('click', () => selectItem(d));
+  return el;
+}
+
+buildList();
+
+// ── タブ切り替え ──────────────────────────────────────────────
+function switchTab(btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const target = btn.dataset.tab;
+  document.getElementById('tab-list').style.display   = target === 'list'   ? '' : 'none';
+  document.getElementById('tab-detail').style.display = target === 'detail' ? '' : 'none';
+}
+
+// ── 詳細表示 ─────────────────────────────────────────────────
+let selectedId = null;
+
+function selectItem(d) {
+  // 地球儀カメラ移動（回転停止してから移動）
+  if (globe) {
+    globe.controls().autoRotate = false;
+    globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.5 }, 1000);
+  }
+
+  // リストのハイライト更新
+  document.querySelectorAll('.list-item').forEach(el => el.classList.remove('selected'));
+  const itemEl = document.getElementById('item-' + d.id.replace(/[^\w]/g, '-'));
+  if (itemEl) itemEl.classList.add('selected');
+  selectedId = d.id;
+
+  // 詳細パネル更新
+  showDetail(d);
+
+  // DETAILタブに切り替え
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-tab="detail"]').classList.add('active');
+  document.getElementById('tab-list').style.display   = 'none';
+  document.getElementById('tab-detail').style.display = '';
+}
+
+function showDetail(d) {
+  document.getElementById('detail-empty').style.display = 'none';
+  document.getElementById('detail-body').style.display  = '';
+
+  // 画像
+  const imgEl     = document.getElementById('d-image');
+  const noImgEl   = document.getElementById('d-no-image');
+  if (d.image) {
+    imgEl.src             = d.image;
+    imgEl.style.display   = '';
+    noImgEl.style.display = 'none';
+  } else {
+    imgEl.style.display   = 'none';
+    noImgEl.style.display = 'none';
+  }
+
+  document.getElementById('d-id').textContent       = d.id;
+  document.getElementById('d-name').textContent     = d.name;
+  document.getElementById('d-desc').textContent     = d.desc;
+  document.getElementById('d-location').textContent = d.location;
+  document.getElementById('d-status').textContent   = d.status;
+
+  const lat = d.lat, lng = d.lng;
+  document.getElementById('d-coords').textContent =
+    `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'}  ${Math.abs(lng).toFixed(2)}°${lng >= 0 ? 'E' : 'W'}`;
+
+  const classKey = d.type === 'facility' ? 'facility' : d.class;
+  const color    = COLORS[classKey] || '#aaa';
+  const badge    = document.getElementById('d-badge');
+  badge.textContent       = d.type === 'facility' ? 'FACILITY' : `CLASS: ${d.class.toUpperCase()}`;
+  badge.style.color       = color;
+  badge.style.borderColor = color + '66';
+
+  const wikiEl = document.getElementById('d-wiki');
+  if (d.wiki) {
+    wikiEl.href = d.wiki;
+    wikiEl.style.display = '';
+  } else {
+    wikiEl.style.display = 'none';
+  }
+}
+
+// ── Globe ─────────────────────────────────────────────────────
+const PANEL_W = 320;
+let currentFilter = 'all';
+let globe;
+
+function getFilteredData() {
+  if (currentFilter === 'facility') return DATA.filter(d => d.type === 'facility');
+  if (currentFilter === 'scp')      return DATA.filter(d => d.type === 'scp');
+  return DATA;
+}
+
+function getColor(d) {
+  return d.type === 'facility' ? COLORS.facility : (COLORS[d.class] || '#fff');
+}
+
+window.addEventListener('load', () => {
+  const w = window.innerWidth - PANEL_W;
+  const h = window.innerHeight;
+
+  globe = Globe()
+    .width(w)
+    .height(h)
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+    .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+    .atmosphereColor('#0d1f33')
+    .atmosphereAltitude(0.15)
+    .pointsData(DATA)
+    .pointLat(d => d.lat)
+    .pointLng(d => d.lng)
+    .pointColor(d => getColor(d))
+    .pointRadius(0.45)
+    .pointAltitude(0.01)
+    .pointLabel(d =>
+      `<div style="font-family:'Courier New',monospace;font-size:10px;color:#ccc;` +
+      `background:rgba(0,0,0,0.85);padding:4px 9px;border:1px solid #333;letter-spacing:1px;">${d.id}</div>`
+    )
+    .onPointClick(d => selectItem(d))
+    .onPointHover(d => { if (d) document.body.style.cursor = 'pointer'; else document.body.style.cursor = ''; })
+    (document.getElementById('globe'));
+
+  globe.controls().autoRotate      = true;
+  globe.controls().autoRotateSpeed = 0.3;
+
+  window.addEventListener('resize', () => {
+    globe.width(window.innerWidth - PANEL_W).height(window.innerHeight);
+  });
+});
+
+// ── Filter ────────────────────────────────────────────────────
+function setFilter(btn) {
+  currentFilter = btn.dataset.f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (globe) globe.pointsData(getFilteredData());
+}
+</script>
+</body>
+</html>
