@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SCP Foundation — Global Containment Map</title>
+  <meta property="og:title" content="SCP Foundation — Global Containment Map">
+  <meta property="og:description" content="SECURE. CONTAIN. PROTECT. — Global containment &amp; observation map. [CLEARANCE LEVEL 3]">
+  <meta property="og:image" content="https://chiba5.github.io/scp-globe/og-image.png">
+  <meta property="og:url" content="https://chiba5.github.io/scp-globe/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SCP Foundation — Global Containment Map">
+  <meta name="twitter:description" content="SECURE. CONTAIN. PROTECT. — Global containment &amp; observation map. [CLEARANCE LEVEL 3]">
+  <meta name="twitter:image" content="https://chiba5.github.io/scp-globe/og-image.png">
   <script src="https://unpkg.com/globe.gl"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -172,14 +181,6 @@
     .d-coords { font-size:9px; color:#555; letter-spacing:1px; margin-top:4px; }
     .d-status { font-size:11px; color:#999; letter-spacing:0.5px; }
     hr.sep { border:none; border-top:1px solid #141414; margin:16px 0; }
-    .wiki-link {
-      display:inline-block; font-size:8px; letter-spacing:2px;
-      color:#555; text-decoration:none;
-      border:1px solid #222; padding:5px 12px; margin-top:6px;
-      transition:all 0.2s;
-    }
-    .wiki-link:hover { color:#aaa; border-color:#555; }
-
     .wiki-preview-card {
       display: flex; text-decoration: none; color: inherit;
       border: 1px solid #151515; background: #060606;
@@ -288,7 +289,6 @@
         <div class="d-label">CONTAINMENT STATUS</div>
         <div class="d-status" id="d-status">—</div>
       </div>
-      <a class="wiki-link" id="d-wiki" href="#" target="_blank">VIEW FULL DOCUMENT →</a>
       <a class="wiki-preview-card" id="d-preview-card" href="#" target="_blank" style="display:none">
         <img id="d-preview-thumb" class="wpc-thumb" src="" alt="" onerror="this.style.display='none'">
         <div class="wpc-body">
@@ -804,10 +804,6 @@ function showDetail(d) {
   badge.textContent       = d.type === 'facility' ? 'FACILITY' : `CLASS: ${d.class.toUpperCase()}`;
   badge.style.color       = color;
   badge.style.borderColor = color + '66';
-
-  const wikiEl = document.getElementById('d-wiki');
-  wikiEl.style.display = d.wiki ? '' : 'none';
-  if (d.wiki) wikiEl.href = d.wiki;
 
   const previewCard = document.getElementById('d-preview-card');
   if (d.wiki) {
