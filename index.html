@@ -851,8 +851,8 @@ window.addEventListener('load', () => {
     .pointsData(DATA)
     .pointLat(d => d.lat).pointLng(d => d.lng)
     .pointColor(d => getColor(d))
-    .pointRadius(d => d.type === 'facility' ? 0.5 : (DANGER_LEVEL[d.class] || 1) * 0.1 + 0.4)
-    .pointAltitude(d => d.type === 'facility' ? 0.01 : (DANGER_LEVEL[d.class] || 1) * 0.006 + 0.008)
+    .pointRadius(d => d.type === 'facility' ? 0.70 : 0.55)
+    .pointAltitude(0.015)
     .pointLabel(d =>
       `<div style="font-family:'Courier New',monospace;font-size:10px;color:#ccc;` +
       `background:rgba(0,0,0,0.85);padding:4px 9px;border:1px solid #333;letter-spacing:1px;">${d.id}</div>`
